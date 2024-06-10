@@ -1,17 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ProductsService } from './products.service';
+import { Product } from './schema/product.schema';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  getAllProducts(): string {
+  async getAllProducts(): Promise<Product[]> {
     return this.productsService.getAllProducts();
   }
 
-  @Get()
-  getProductById(): string {
-    return this.productsService.getProductById();
+  @Get(':id')
+  async getProductById(@Param('id') id: string): Promise<Product> {
+    return this.productsService.getProductById(id);
   }
 }
