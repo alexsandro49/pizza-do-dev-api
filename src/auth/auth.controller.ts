@@ -1,14 +1,22 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from './schema/user.schema';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  authUser(): string {
-    return this.authService.authUser();
+  @Get()
+  async authUser(@Body() userData: CreateUserDto): Promise<User> {
+    return await this.authService.authUser(userData);
   }
 
   @Post('create')

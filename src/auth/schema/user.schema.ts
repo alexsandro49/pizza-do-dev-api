@@ -4,7 +4,7 @@ import { gender } from '../enum/gender.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ versionKey: false })
 export class User {
   @Prop({ default: '' })
   name: string;
@@ -12,8 +12,8 @@ export class User {
   @Prop({ default: '' })
   cpf: string;
 
-  @Prop({ default: new Date('0000') })
-  dob: number;
+  @Prop({ default: new Date('0000').toISOString().split('T')[0] })
+  dob: string;
 
   @Prop({ default: gender.Male })
   gender: gender;

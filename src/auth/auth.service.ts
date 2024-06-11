@@ -11,8 +11,14 @@ export class AuthService {
   ) {}
 
   async createUser(userData: CreateUserDto): Promise<User> {
-    const userCreated = await this.userModel.create(userData);
-    return userCreated;
+    return await this.userModel.create(userData);
+  }
+
+  async authUser(userData: CreateUserDto): Promise<User> {
+    return await this.userModel.findOne({
+      email: userData.email,
+      password_hash: userData.password_hash,
+    });
   }
 
   removeUser(id: number): string {
@@ -21,10 +27,6 @@ export class AuthService {
 
   updateUser(id: number, userDate: {}): string {
     return "This action update a user's data";
-  }
-
-  authUser(): string {
-    return "This action auth the user's credentials";
   }
 
   recoverPassword(id: number): string {
