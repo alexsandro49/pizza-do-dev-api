@@ -1,5 +1,6 @@
 import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from './schema/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -10,9 +11,11 @@ export class AuthController {
     return this.authService.authUser();
   }
 
-  @Post()
-  createAccount(@Body() userData: {}): string {
-    return this.authService.createAccount(userData);
+  @Post('create')
+  async createAccount(
+    @Body() userData: { email: string; password_hash: string },
+  ): Promise<User> {
+    return this.authService.createUser(userData);
   }
 
   @Post()
