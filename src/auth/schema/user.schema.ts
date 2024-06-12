@@ -25,7 +25,7 @@ export class User {
   tel: string;
 
   @Prop({ require: true })
-  password_hash: string;
+  password: string;
 
   @Prop({ default: [{ street: '', neighborhood: '', number: 0 }] })
   adresses: [{ street: string; neighborhood: string; number: number }];
