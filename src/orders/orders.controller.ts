@@ -1,25 +1,42 @@
-import { Body, Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  ValidationPipe,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
+import { Order } from './schema/order.schema';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { PeriodOrderDto } from './dto/period-order.dto';
+import { OrderByUserIdDto } from './dto/order-by-user-id.dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @Post()
+  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+    return await this.ordersService.createOrder(createOrderDto);
+  }
+
   @Get()
-  getOrders(): string {
-    return this.ordersService.getOrders();
+  async getOrders(
+    @Body(ValidationPipe) orderByUserIdDto: OrderByUserIdDto,
+  ): Promise<Order[]> {
+    return await this.ordersService.getOrders(orderByUserIdDto);
   }
 
   @Get('period')
-  getOrderByPeriod(@Body() values: { startDate: Date; endDate: Date }): string {
-    return this.ordersService.getOrderByPeriod(
-      values.startDate,
-      values.endDate,
-    );
+  async getOrderByPeriod(
+    @Body() periodOrderDto: PeriodOrderDto,
+  ): Promise<Order[]> {
+    return this.ordersService.getOrderByPeriod(periodOrderDto);
   }
 
   @Get(':id')
-  getOrderById(@Param('id', ParseIntPipe) id: string): string {
-    return this.ordersService.getOrderById(id);
+  async getOrderById(@Param('id') id: OrderByUserIdDto): Promise<Order> {
+    return await this.ordersService.getOrderById(id);
   }
 }

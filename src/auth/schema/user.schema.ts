@@ -4,7 +4,7 @@ import { gender } from '../enum/gender.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({ versionKey: false })
+@Schema({ timestamps: true, versionKey: false })
 export class User {
   @Prop({ default: '' })
   name: string;

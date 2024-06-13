@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { gender } from '../enum/gender.enum';
 import { AuthUserDto } from './auth-user.dto';
 import { Type } from 'class-transformer';

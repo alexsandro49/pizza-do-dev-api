@@ -4,6 +4,7 @@ import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { UserByIdDto } from './dto/user-by-id.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,11 @@ export class AuthService {
   ) {}
 
   async createUser(authUserDto: AuthUserDto): Promise<User> {
-    if ((await this.userExists(authUserDto)) !== null) {
+    const user: User = await this.userModel.findOne({
+      email: authUserDto.email,
+    });
+
+    if (user !== null) {
       throw new HttpException(
         'This email has already been registered in the system',
         HttpStatus.CONFLICT,
@@ -23,30 +28,50 @@ export class AuthService {
   }
 
   async authUser(authUserDto: AuthUserDto): Promise<User> {
-    const userExists: User = await this.userExists(authUserDto);
+    const user: User = await this.userModel.findOne({
+      email: authUserDto.email,
+    });
 
-    if (userExists === null) {
+    if (user === null) {
+      throw new HttpException(
+        'User not found on the system',
+        HttpStatus.NOT_FOUND,
+      );
+    } else if (user.password !== authUserDto.password) {
+      throw new HttpException(
+        "User's password is incorrect",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    return user;
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto): Promise<User> {
+    const user: User = await this.userModel.findById(updateUserDto._id);
+
+    if (user === null) {
       throw new HttpException(
         'User not found on the system',
         HttpStatus.NOT_FOUND,
       );
     }
 
-    return userExists;
+    await this.userModel.findByIdAndUpdate(updateUserDto._id, updateUserDto);
+
+    return await this.userModel.findById(updateUserDto._id);
   }
 
-  updateUser(updateUserDto: UpdateUserDto): string {
-    return "This action update a user's data";
-  }
+  async removeUser(userBydIdDto: UserByIdDto): Promise<User> {
+    const user: User = await this.userModel.findById(userBydIdDto);
 
-  removeUser(id: number): string {
-    return 'This action remove a user';
-  }
+    if (user === null) {
+      throw new HttpException(
+        'User not found on the system',
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
-  private async userExists(authUserDto: AuthUserDto): Promise<User> {
-    return await this.userModel.findOne({
-      email: authUserDto.email,
-      password: authUserDto.password,
-    });
+    return await this.userModel.findByIdAndDelete(userBydIdDto);
   }
 }

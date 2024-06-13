@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { User } from './schema/user.schema';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { UserByIdDto } from './dto/user-by-id.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,8 +23,17 @@ export class AuthController {
     return this.authService.createUser(authUserDto);
   }
 
-  @Post()
-  recoverPassword(@Body(ValidationPipe) updateUserDto: UpdateUserDto): string {
-    return this.authService.updateUser(updateUserDto);
+  @Post('update')
+  async recoverPassword(
+    @Body(ValidationPipe) updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    return await this.authService.updateUser(updateUserDto);
+  }
+
+  @Post(':remove')
+  async removeAccount(
+    @Body(ValidationPipe) userByIdDto: UserByIdDto,
+  ): Promise<User> {
+    return this.authService.removeUser(userByIdDto);
   }
 }
