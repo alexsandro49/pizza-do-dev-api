@@ -1,49 +1,27 @@
 import { Type } from 'class-transformer';
-import {
-  IsString,
-  IsNotEmpty,
-  IsBoolean,
-  IsNumber,
-  IsArray,
-  IsMongoId,
-} from 'class-validator';
-import { ObjectId } from 'mongoose';
+import { IsNotEmpty, IsNumber, IsArray, IsMongoId } from 'class-validator';
+import { ProductDto } from 'src/products/dto/product.dto';
 
 export class CreateOrderDto {
-  @IsMongoId()
   @IsNotEmpty()
-  user_id: ObjectId;
-
-  @IsString()
-  @IsNotEmpty()
-  cpf: string;
+  readonly user_id: string;
 
   @IsArray()
   @Type(() => ProductDto)
-  products: [ProductDto];
+  readonly products: [ProductDto];
 
   @IsArray()
   @Type(() => ProductDto)
-  side_dishes: [{ _id: string; amount: number }];
-
-  @IsBoolean()
-  @IsNotEmpty()
-  deliver: boolean;
-
-  @IsNumber()
-  adress: number;
+  readonly side_dishes: [ProductDto];
 
   @IsNumber()
   @IsNotEmpty()
-  total_cust: number;
-}
+  readonly deliver: number;
 
-class ProductDto {
-  @IsString()
-  @IsNotEmpty()
-  readonly _id: string;
+  @IsNumber()
+  readonly adress: number;
 
   @IsNumber()
   @IsNotEmpty()
-  readonly amount: string;
+  readonly total_cust: number;
 }

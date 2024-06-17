@@ -14,6 +14,6 @@ export class ProductsService {
   }
 
   getProductById(id: string): Promise<Product> {
-    return this.productModel.findOne({ _id: id }).exec();
+    return this.productModel.findById(id);
   }
 }

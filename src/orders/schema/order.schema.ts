@@ -1,21 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, SchemaTypes, Types } from 'mongoose';
+import { HydratedDocument, ObjectId, SchemaTypes } from 'mongoose';
 
 export type UserDocument = HydratedDocument<Order>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Order {
   @Prop({ type: SchemaTypes.ObjectId })
-  user_id: Types.ObjectId;
+  user_id: ObjectId;
 
   @Prop()
-  cpf: string;
+  products: [{ _id: string; amount: number; comments: string }];
 
   @Prop()
-  products: [{ _id: string; amount: number }];
-
-  @Prop()
-  side_dishes: [{ _id: string; amount: number }];
+  side_dishes: [{ _id: string; amount: number; comments: string }];
 
   @Prop()
   deliver: boolean;
